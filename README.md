@@ -21,8 +21,8 @@ Spritz is a RC4 redesign by *Ron Rivest* and *Jacob Schuldt*
 * `Spritz.mac(message, key, code)`
 
 ## PRNG
-* `random()`
-* `randomSeed(seed)`
+* `Spritz.random()`
+* `Spritz.randomSeed(seed)`
 
 # License
 Release into the [Public Domain](LICENSE.txt).
