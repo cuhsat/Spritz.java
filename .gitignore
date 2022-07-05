@@ -24,9 +24,3 @@ hs_err_pid*
 
 # Documentation
 *.pdf
-
-# IntelliJ IDEA
-**/.idea/
-
-# Binaries
-**/out/
