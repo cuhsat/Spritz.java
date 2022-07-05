@@ -38,9 +38,9 @@ public final class SpritzTests {
      */
     @Test
     public void testEncryption() {
-        short[] key = getShorts("Secret");
-        short[] pt = getShorts("Hello World!");
-        short[] ct = pt.clone();
+        var key = getShorts("Secret");
+        var pt = getShorts("Hello World!");
+        var ct = pt.clone();
 
         Spritz.encrypt(ct, key);
         Spritz.decrypt(ct, key);
@@ -53,18 +53,18 @@ public final class SpritzTests {
      */
     @Test
     public void testBasic() {
-        String[] inputs = new String[] { "ABC", "spam", "arcfour" };
+        var inputs = new String[] { "ABC", "spam", "arcfour" };
 
-        short[][] outputs  = new short[][] {
+        var outputs  = new short[][] {
                 { 0x77, 0x9A, 0x8E, 0x01, 0xF9, 0xE9, 0xCB, 0xC0 },
                 { 0xF0, 0x60, 0x9A, 0x1D, 0xF1, 0x43, 0xCE, 0xBF },
                 { 0x1A, 0xFA, 0x8B, 0x5E, 0xE3, 0x37, 0xDB, 0xC7 }
         };
 
         for (int test = 0; test < 3; test++) {
-            short[] input = getShorts(inputs[test]);
-            short[] vector = outputs[test];
-            short[] output = new short[8];
+            var input = getShorts(inputs[test]);
+            var vector = outputs[test];
+            var output = new short[8];
 
             Spritz.basic(input, output);
 
@@ -77,18 +77,18 @@ public final class SpritzTests {
      */
     @Test
     public void testHash() {
-        String[] inputs = new String[] { "ABC", "spam", "arcfour" };
+        var inputs = new String[] { "ABC", "spam", "arcfour" };
 
-        short[][] outputs  = new short[][] {
+        var outputs  = new short[][] {
                 { 0x02, 0x8F, 0xA2, 0xB4, 0x8B, 0x93, 0x4A, 0x18 },
                 { 0xAC, 0xBB, 0xA0, 0x81, 0x3F, 0x30, 0x0D, 0x3A },
                 { 0xFF, 0x8C, 0xF2, 0x68, 0x09, 0x4C, 0x87, 0xB9 }
         };
 
         for (int test = 0; test < 3; test++) {
-            short[] message = getShorts(inputs[test]);
-            short[] vector = outputs[test];
-            short[] digest = new short[32];
+            var message = getShorts(inputs[test]);
+            var vector = outputs[test];
+            var digest = new short[32];
 
             Spritz.hash(message, digest);
 
@@ -97,8 +97,8 @@ public final class SpritzTests {
     }
 
     private short[] getShorts(String input) {
-        byte[] bytes = getBytes(input);
-        short[] result = new short[bytes.length];
+        var bytes = getBytes(input);
+        var result = new short[bytes.length];
 
         IntStream.range(0, bytes.length).forEach(i -> result[i] = bytes[i]);
 

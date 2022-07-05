@@ -110,7 +110,7 @@ public final class Spritz {
     }
 
     static void absorb(short[] b) {
-        for (short v : b) {
+        for (var v : b) {
             absorbByte(v);
         }
     }
@@ -158,7 +158,7 @@ public final class Spritz {
 
     static void crush() {
         IntStream.range(0, (N / 2)).forEach(v -> {
-            short t = (short) (N - 1 - v);
+            var t = (short) (N - 1 - v);
             if (sBox[v] > sBox[t]) {
                 swap((short) v, t);
             }
@@ -173,7 +173,7 @@ public final class Spritz {
     }
 
     static void swap(short x, short y) {
-        short t = sBox[x];
+        var t = sBox[x];
         sBox[x] = sBox[y];
         sBox[y] = t;
     }
