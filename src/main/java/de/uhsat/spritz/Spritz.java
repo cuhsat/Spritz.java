@@ -40,21 +40,21 @@ public final class Spritz {
     private static short a, i, j, k, w, z;
 
     /**
-     * Encrypts the given text with the given key.
-     * @param text the plain text
+     * Encrypts the given data with the given key.
+     * @param data the data
      * @param key the key
      */
-    public static void encrypt(short[] text, short[] key) {
-        permute(text, key, v -> text[v] = (short) ((text[v] + drip()) & 0xFF));
+    public static void encrypt(short[] data, short[] key) {
+        permute(data, key, v -> data[v] = (short) ((data[v] + drip()) & 0xFF));
     }
 
     /**
-     * Decrypts the given text with the given key.
-     * @param text the cipher text
+     * Decrypts the given data with the given key.
+     * @param data the data
      * @param key the key
      */
-    public static void decrypt(short[] text, short[] key) {
-        permute(text, key, v -> text[v] = (short) ((text[v] - drip()) & 0xFF));
+    public static void decrypt(short[] data, short[] key) {
+        permute(data, key, v -> data[v] = (short) ((data[v] - drip()) & 0xFF));
     }
 
     /**
@@ -81,21 +81,49 @@ public final class Spritz {
         squeeze(output);
     }
 
-    static void permute(short[] data, short[] key, IntConsumer func) {
+    /**
+     * Permutes the given data and key with a lambda.
+     * @param data the data
+     * @param key the key
+     * @param action the lambda
+     */
+    static void permute(short[] data, short[] key, IntConsumer action) {
         keySetup(key);
-        IntStream.range(0, data.length).forEach(func);
+        IntStream.range(0, data.length).forEach(action);
     }
 
+    /**
+     * Sets up the cipher with the given key.
+     * @param key the key
+     */
     static void keySetup(short[] key) {
         initializeState();
         absorb(key);
     }
 
+    /**
+     * Initializes the ciphers internal states and the S-box.
+     */
     static void initializeState() {
         a = i = j = k = z = 0; w = 1;
         IntStream.range(0, N).forEach(v -> sBox[v] = (short) v);
     }
 
+    /**
+     * Produces multiple output values.
+     * @param values the output values
+     */
+    static void squeeze(short[] values) {
+        if (a > 0) {
+            shuffle();
+        }
+        IntStream.range(0, min(values.length, N)).forEach(v -> values[v] = drip());
+    }
+
+    /**
+     * Produces a single output value.
+     * @return the output value
+     */
     static short drip() {
         if (a > 0) {
             shuffle();
@@ -104,30 +132,49 @@ public final class Spritz {
         return output();
     }
 
+    /**
+     * Returns a single output value.
+     * @return the output value
+     */
     static short output() {
         z = sBox[(j + sBox[(i + sBox[(z + k) & 0xFF]) & 0xFF]) & 0xFF];
         return z;
     }
 
-    static void absorb(short[] b) {
-        for (var v : b) {
-            absorbByte(v);
+    /**
+     * Absorbs multiple bytes.
+     * @param values the bytes
+     */
+    static void absorb(short[] values) {
+        for (var value : values) {
+            absorbByte(value);
         }
     }
 
-    static void absorbByte(short b) {
-        absorbNibble((short) (b & 0x0F));
-        absorbNibble((short) (b >> 4));
+    /**
+     * Absorbs a byte.
+     * @param value the byte
+     */
+    static void absorbByte(short value) {
+        absorbNibble((short) (value & 0x0F));
+        absorbNibble((short) (value >> 4));
     }
 
-    static void absorbNibble(short x) {
+    /**
+     * Absorbs a nibble.
+     * @param value the nibble
+     */
+    static void absorbNibble(short value) {
         if (a == (N / 2)) {
             shuffle();
         }
-        swap(a, (short) (((N / 2) + x) & 0xFF));
+        swap(a, (short) (((N / 2) + value) & 0xFF));
         a++;
     }
 
+    /**
+     * Absorbs the stop symbol.
+     */
     static void absorbStop() {
         if (a == (N / 2)) {
             shuffle();
@@ -135,13 +182,9 @@ public final class Spritz {
         a++;
     }
 
-    static void squeeze(short[] digest) {
-        if (a > 0) {
-            shuffle();
-        }
-        IntStream.range(0, min(digest.length, N)).forEach(v -> digest[v] = drip());
-    }
-
+    /**
+     * Calculates the ciphers internal states.
+     */
     static void shuffle() {
         whip();
         crush();
@@ -151,11 +194,17 @@ public final class Spritz {
         a = 0;
     }
 
+    /**
+     * Calculates the ciphers internal states.
+     */
     static void whip() {
         IntStream.range(0, (N * 2)).forEach(v -> update());
         w += 2;
     }
 
+    /**
+     * Calculates the ciphers internal states.
+     */
     static void crush() {
         IntStream.range(0, (N / 2)).forEach(v -> {
             var t = (short) (N - 1 - v);
@@ -165,6 +214,9 @@ public final class Spritz {
         });
     }
 
+    /**
+     * Updates the S-box.
+     */
     static void update() {
         i = (short) ((i + w) & 0xFF);
         j = (short) ((k + sBox[(j + sBox[i]) & 0xFF]) & 0xFF);
@@ -172,6 +224,11 @@ public final class Spritz {
         swap(i, j);
     }
 
+    /**
+     * Swaps two values in the S-box.
+     * @param x the first index
+     * @param y the second index
+     */
     static void swap(short x, short y) {
         var t = sBox[x];
         sBox[x] = sBox[y];
