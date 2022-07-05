@@ -49,6 +49,21 @@ public final class SpritzTests {
     }
 
     /**
+     * Tests the build-in message authentication feature.
+     */
+    @Test
+    public void testMac(){
+        var key = getShorts("Secret");
+        var msg = getShorts("Hello World!");
+        var test = new short[] { 0x8D, 0xA4, 0x44, 0xD8, 0xF5, 0x77, 0xC4, 0x11 };
+        var code = new short[8];
+
+        Spritz.mac(msg, key, code);
+
+        IntStream.range(0, code.length).forEach(i -> Assert.assertEquals(test[i], code[i]));
+    }
+
+    /**
      * Tests all official basic test vectors (from APPENDIX E).
      */
     @Test
@@ -96,6 +111,11 @@ public final class SpritzTests {
         }
     }
 
+    /**
+     * Returns the given strings bytes as shorts.
+     * @param input the input
+     * @return the shorts
+     */
     private short[] getShorts(String input) {
         var bytes = getBytes(input);
         var result = new short[bytes.length];
@@ -105,6 +125,11 @@ public final class SpritzTests {
         return result;
     }
 
+    /**
+     * Returns the given strings bytes.
+     * @param input the input
+     * @return the bytes
+     */
     private byte[] getBytes(String input) {
         return input.getBytes(StandardCharsets.US_ASCII);
     }

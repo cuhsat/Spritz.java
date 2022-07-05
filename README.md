@@ -8,6 +8,7 @@ Spritz is a RC4 redesign by *Ron Rivest* and *Jacob Schuldt*
 * `void Spritz.encrypt(short[] text, short[] key)`
 * `void Spritz.decrypt(short[] text, short[] key)`
 * `void Spritz.hash(short[] message, short[] digest)`
+* `void Spritz.mac(short[] message, short[], key, short[] code)`
 
 # License
 Release into the [Public Domain](LICENSE.txt).

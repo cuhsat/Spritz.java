@@ -58,6 +58,22 @@ public final class Spritz {
     }
 
     /**
+     * Creates the message authentication code.
+     * @param message the message
+     * @param key the key
+     * @param code the authentication code
+     */
+    public static void mac(short[] message, short[] key, short[] code) {
+        initializeState();
+        absorb(key);
+        absorbStop();
+        absorb(message);
+        absorbStop();
+        absorb(new short[] { (short) code.length });
+        squeeze(code);
+    }
+
+    /**
      * Hashes the given message and fills in the digest.
      * @param message the message
      * @param digest the message digest
@@ -173,7 +189,7 @@ public final class Spritz {
     }
 
     /**
-     * Absorbs the stop symbol.
+     * Absorbs the special stop symbol.
      */
     static void absorbStop() {
         if (a == (N / 2)) {
