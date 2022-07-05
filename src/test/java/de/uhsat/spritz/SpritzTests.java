@@ -65,6 +65,18 @@ public final class SpritzTests {
     }
 
     /**
+     * Tests the build-in pseudo random number feature.
+     */
+    @Test
+    public void testRandom() {
+        Spritz.randomSeed(getShorts("Seed"));
+
+        var number = Spritz.random();
+
+        Assert.assertNotEquals(0, number);
+    }
+
+    /**
      * Tests the build-in message authentication feature.
      */
     @Test

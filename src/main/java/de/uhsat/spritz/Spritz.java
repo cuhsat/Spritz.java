@@ -78,6 +78,24 @@ public final class Spritz {
     }
 
     /**
+     * Returns a pseudo random number.
+     * @return the number
+     */
+    public static int random() {
+        return (drip() << 16) | (drip() & 0xFFFF);
+    }
+
+    /**
+     * Seeds the pseudo random number generator.
+     * @param seed the seed
+     */
+    public static void randomSeed(short[] seed) {
+        initializeState();
+        absorb(seed);
+        absorbStop();
+    }
+
+    /**
      * Creates the message authentication code.
      * @param message the message
      * @param key the key
