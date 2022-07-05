@@ -49,6 +49,22 @@ public final class SpritzTests {
     }
 
     /**
+     * Tests the build-in encryption feature.
+     */
+    @Test
+    public void testEncryptionWithIV() {
+        var key = getShorts("Secret");
+        var iv = getShorts("Vector");
+        var pt = getShorts("Hello World!");
+        var ct = pt.clone();
+
+        Spritz.encrypt(ct, key, iv);
+        Spritz.decrypt(ct, key, iv);
+
+        IntStream.range(0, pt.length).forEach(i -> Assert.assertEquals(pt[i], ct[i]));
+    }
+
+    /**
      * Tests the build-in message authentication feature.
      */
     @Test

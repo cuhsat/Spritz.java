@@ -49,12 +49,32 @@ public final class Spritz {
     }
 
     /**
+     * Encrypts the given data with the given key and initialization vector.
+     * @param data the data
+     * @param key the key
+     * @param iv the initialization vector
+     */
+    public static void encrypt(short[] data, short[] key, short[] iv) {
+        permute(data, key, iv, v -> data[v] = (short) ((data[v] + drip()) & 0xFF));
+    }
+
+    /**
      * Decrypts the given data with the given key.
      * @param data the data
      * @param key the key
      */
     public static void decrypt(short[] data, short[] key) {
         permute(data, key, v -> data[v] = (short) ((data[v] - drip()) & 0xFF));
+    }
+
+    /**
+     * Decrypts the given data with the given key and initialization vector.
+     * @param data the data
+     * @param key the key
+     * @param iv the initialization vector
+     */
+    public static void decrypt(short[] data, short[] key, short[] iv) {
+        permute(data, key, iv, v -> data[v] = (short) ((data[v] - drip()) & 0xFF));
     }
 
     /**
@@ -105,6 +125,20 @@ public final class Spritz {
      */
     static void permute(short[] data, short[] key, IntConsumer action) {
         keySetup(key);
+        IntStream.range(0, data.length).forEach(action);
+    }
+
+    /**
+     * Permutes the given data, key and initialization vector with a lambda.
+     * @param data the data
+     * @param key the key
+     * @param iv the initialization vector
+     * @param action the lambda
+     */
+    static void permute(short[] data, short[] key, short[] iv, IntConsumer action) {
+        keySetup(key);
+        absorbStop();
+        absorb(iv);
         IntStream.range(0, data.length).forEach(action);
     }
 
