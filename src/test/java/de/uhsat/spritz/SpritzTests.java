@@ -26,11 +26,13 @@
  */
 package de.uhsat.spritz;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public final class SpritzTests {
     /**
@@ -45,7 +47,7 @@ public final class SpritzTests {
         Spritz.encrypt(ct, key);
         Spritz.decrypt(ct, key);
 
-        IntStream.range(0, pt.length).forEach(i -> Assert.assertEquals(pt[i], ct[i]));
+        IntStream.range(0, pt.length).forEach(i -> assertEquals(pt[i], ct[i]));
     }
 
     /**
@@ -61,7 +63,7 @@ public final class SpritzTests {
         Spritz.encrypt(ct, key, iv);
         Spritz.decrypt(ct, key, iv);
 
-        IntStream.range(0, pt.length).forEach(i -> Assert.assertEquals(pt[i], ct[i]));
+        IntStream.range(0, pt.length).forEach(i -> assertEquals(pt[i], ct[i]));
     }
 
     /**
@@ -73,7 +75,7 @@ public final class SpritzTests {
 
         var number = Spritz.random();
 
-        Assert.assertNotEquals(0, number);
+        assertNotEquals(0, number);
     }
 
     /**
@@ -88,7 +90,7 @@ public final class SpritzTests {
 
         Spritz.mac(msg, key, code);
 
-        IntStream.range(0, code.length).forEach(i -> Assert.assertEquals(test[i], code[i]));
+        IntStream.range(0, code.length).forEach(i -> assertEquals(test[i], code[i]));
     }
 
     /**
@@ -111,7 +113,7 @@ public final class SpritzTests {
 
             Spritz.basic(input, output);
 
-            IntStream.range(0, vector.length).forEach(i -> Assert.assertEquals(vector[i], output[i]));
+            IntStream.range(0, vector.length).forEach(i -> assertEquals(vector[i], output[i]));
         }
     }
 
@@ -135,7 +137,7 @@ public final class SpritzTests {
 
             Spritz.hash(message, digest);
 
-            IntStream.range(0, vector.length).forEach(i -> Assert.assertEquals(vector[i], digest[i]));
+            IntStream.range(0, vector.length).forEach(i -> assertEquals(vector[i], digest[i]));
         }
     }
 
