@@ -1,5 +1,5 @@
 # Spritz.java
-A Spritz cipher implementation in pure Java 18.
+A Spritz cipher implementation in pure Java.
 
 Spritz is a RC4 redesign by *Ron Rivest* and *Jacob Schuldt*
 [(PDF)](doc/RS14.pdf).
